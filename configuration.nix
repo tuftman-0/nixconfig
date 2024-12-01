@@ -74,7 +74,7 @@ in
 {
   imports = [
     # Include the results of the hardware scan.
-    /etc/nixos/hardware-configuration.nix
+    ./hardware-configuration.nix
     # /etc/nixos/qtile.nix
     # (import "${home-manager}/nixos")
   ];
@@ -296,7 +296,8 @@ in
       font-awesome
       powerline-fonts
       powerline-symbols
-      (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
+      nerd-fonts.symbols-only
+      # (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
       proggyfonts
       cozette
       luculent
@@ -427,7 +428,7 @@ in
     hyprcursor
     hypridle
     hyprlock
-    bibata-cursors
+    # bibata-cursors
     waybar
     dunst
     networkmanagerapplet
