@@ -1,7 +1,7 @@
 #Edit this configuration file to define what should be installed on
 #f your system.  Help is available in the configuration.nix(5) man page
 #a and in the NixOS manual (accessible by running ‘nixos-help’).
-{ config, pkgs, lib, ... }:
+{ config, pkgs, inputs, lib, ... }:
 
 # let
 #   unstable = import <nixos-unstable> { config = { allowUnfree = true;}; };
@@ -72,6 +72,8 @@ let
 
 in
 {
+  # nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"]; # not sure if this is necessary
+
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -99,11 +101,11 @@ in
   security.polkit.enable = true;
   # hardware.opengl.enable = true;
   hardware.graphics.enable = true; # same but for new version
-  
+
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  
+
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -116,7 +118,7 @@ in
   services.gnome.gnome-keyring.enable = true;
 
   hardware.bluetooth.enable = true; # enables support for Bluetooth
-  hardware.bluetooth.powerOnBoot = true; 
+  hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;
 
   # Set your time zone.
@@ -124,7 +126,7 @@ in
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-  
+
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_CA.UTF-8";
     LC_IDENTIFICATION = "en_CA.UTF-8";
@@ -187,7 +189,7 @@ in
   programs.file-roller.enable = true;
   services.gvfs.enable = true; # Mount, trash, and other functionalities
   services.tumbler.enable = true; # Thumbnail support for images
-
+  
   programs.zsh = {
     enable = true;
     shellAliases = {
@@ -196,6 +198,14 @@ in
     };
     # export is just for kakoune treesitter: export PATH=$HOME/.cargo/bin:$PATH
     promptInit=''
+      function y() {
+          local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+          yazi "$@" --cwd-file="$tmp"
+          if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+              builtin cd -- "$cwd"
+          fi
+          rm -f -- "$tmp"
+      } 
     	eval "$(zoxide init zsh)"
     '';
 
@@ -216,10 +226,16 @@ in
     enable = true;
   };
 
+
+  # programs.yazi = {
+  #   enable = true;
+  # };
+
+
   # programs.direnv = {
   #   enable = true;
   # };
-  
+
   programs.nix-ld.enable=true;
   programs.nix-ld.libraries = with pkgs; [
     # add missing libraries here
@@ -232,8 +248,8 @@ in
     dataDir = "/home/josh/syncthing";    # Default folder for new synced folders
     configDir = "/home/josh/syncthing";   # Folder for Syncthing's settings and keys
   };
-  
-  
+
+
   environment.shells = with pkgs; [zsh];
   users.defaultUserShell = pkgs.zsh;
   environment.variables = {
@@ -251,13 +267,25 @@ in
     # Not officially in the specification
     XDG_BIN_HOME    = "$HOME/.local/bin";
 
-    PATH = [ 
+    PATH = [
       "${XDG_BIN_HOME}"
     ];
   };
 
-  xdg.portal.enable = true;
-  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true;
+    config = {
+      common.default = ["gtk"];
+      hyprland.default = ["gtk" "hyprland"];
+    };
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-wlr
+      pkgs.xdg-desktop-portal-hyprland
+    ];
+  };
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -277,6 +305,15 @@ in
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
+
+  # garbage collection settings
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+  boot.loader.grub.configurationLimit = 30;
+
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -320,12 +357,12 @@ in
     description = "Josh Martin";
     extraGroups = ["networkmanager" "wheel" "audio" "video" "input"];
     shell = pkgs.zsh;
-    
+
     packages = with pkgs; [
       firefox
-      qutebrowser
       jetbrains.idea-community
-      discord
+      # discord
+      discord-canary
       steam
       # gimp
       obsidian
@@ -351,6 +388,8 @@ in
     ripgrep
     nil
     nixd
+    nixfmt-rfc-style # nix formatter
+    alejandra # nix formatter
     lua-language-server
     # zls
     pyright
@@ -365,7 +404,7 @@ in
     zed-editor
     emacs #doom emacs needs: git, ripgrep; wants: fd, coreutils, clang
 
-    # # fix dumb gsettings BS 
+    # # fix dumb gsettings BS
     # glib
     # dracula-theme
     # gnome3.adwaita-icon-theme
@@ -375,14 +414,14 @@ in
     git
     yazi
     fd # for yazi
+    dragon
     ranger # file manager
     # stuff for ranger
-    atool 
+    atool
     unzip
     unrar
 
     lf # file manager
-    dragon
 
     starship
     zoxide
@@ -399,11 +438,11 @@ in
     hstr
     qbittorrent
 
-    qdirstat
-    
+    qdirstat # disk view utility
+
     # yuzu
     # citra
-    
+
     # peazip # archive manager
     pkgs.file-roller
     lxqt.lxqt-policykit
