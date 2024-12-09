@@ -396,6 +396,7 @@ in
     wget
     curl
     git
+    lazygit
     yazi
     fd # for yazi
     dragon
