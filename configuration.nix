@@ -52,46 +52,24 @@ let
           ])
         ];
       });
-
-  mykakoune = pkgs.kakoune.overrideAttrs
-  (old: {
-    generatedWrapperArgs = old.generatedWrapperArgs or [ ] ++ [
-      "--prefix"
-      "PATH"
-      ":"
-      (lib.makeBinPath [
-        pkgs.cargo
-        pkgs.ripgrep
-        pkgs.nil
-        pkgs.nixd
-        pkgs.pyright
-        pkgs.fd
-      ])
-    ];
-  });
-
 in
 {
-  # nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"]; # not sure if this is necessary
+  # nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"]; # not sure if this is necessary (doesn't seem to work)
 
   imports = [
-    # Include the results of the hardware scan.
     ./hardware-configuration.nix
     # /etc/nixos/qtile.nix
-    # (import "${home-manager}/nixos")
   ];
 
 
   # enable flakes and stuff
   nix.settings.experimental-features = ["nix-command" "flakes"];
-
-  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # Bootloader.
+  # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  # kernel
+  # get latest kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
   # boot.loader.grub.useOSProber = true; # check if this works
 
@@ -287,7 +265,13 @@ in
   };
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  # services.printing.enable = true;
+  services.printing = {
+    enable = true;
+    drivers = [
+      pkgs.cups-pdf-to-pdf
+    ];
+  };
 
   # Enable sound with pipewire.
   # sound.enable = true;
@@ -316,7 +300,7 @@ in
 
 
   # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  # services.xserver.libinput.enable = true; # old way
   services.libinput.enable = true;
   fonts = {
     fontDir.enable = true;
@@ -349,8 +333,6 @@ in
     };
   };
 
-  # enable insecure electron for obsidian
-  # nixpkgs.config.permittedInsecurePackages = ["electron-25.9.0"];
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.josh = {
     isNormalUser = true;
@@ -395,19 +377,21 @@ in
     pyright
     helix
 
+    # # have decided to use plug.kak instead
+    # (kakoune.override {
+    #   plugins = with pkgs.kakounePlugins; [
+    #     fzf-kak
+    #     kakoune-lsp
+    #     smarttab-kak
+    #   ];
+    # })
+
     kakoune
     kak-lsp
-    # my-kak-tree-sitter
     kak-tree-sitter
-    # ktsctl
 
     zed-editor
     emacs #doom emacs needs: git, ripgrep; wants: fd, coreutils, clang
-
-    # # fix dumb gsettings BS
-    # glib
-    # dracula-theme
-    # gnome3.adwaita-icon-theme
 
     wget
     curl
@@ -467,6 +451,7 @@ in
     hyprcursor
     hypridle
     hyprlock
+    hyprpicker
     # bibata-cursors
     waybar
     dunst
@@ -477,6 +462,7 @@ in
     libnotify
     brightnessctl
     swww #screenshare
+    cups-pdf-to-pdf # print to pdf utility?
 
     # obs-studio
     (wrapOBS {
