@@ -30,6 +30,7 @@ let
   #       gsettings set $gnome_schema gtk-theme 'Dracula'
   #     '';
   #   };
+ 
 
   myneovim = pkgs.neovim.overrideAttrs
       (old: {
@@ -54,17 +55,93 @@ let
       });
 in
 {
+
   # nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"]; # not sure if this is necessary (doesn't seem to work)
+
 
   imports = [
     ./hardware-configuration.nix
     # /etc/nixos/qtile.nix
   ];
 
+  # nix = let
+  #   flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
+  # in {
 
+  #   settings = {
+  #     experimental-features = "nix-command flakes";
+  #     nix-path = config.nix.nixPath;
+ 
+  #   };
+
+    # # garbage collection
+    # gc = {
+    #     automatic = true;
+    #     dates = "weekly";
+    #     options = "--delete-older-than 30d";
+    #   };
+
+    # registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
+    # nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
+  # };
+
+
+  # nix = let
+  #     flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
+  #   in {
+  #     settings = {
+  #       # Enable flakes and new 'nix' command
+  #       experimental-features = "nix-command flakes";
+  #       # Opinionated: disable global registry
+  #       # flake-registry = "";
+  #       # Workaround for https://github.com/NixOS/nix/issues/9574
+  #       nix-path = config.nix.nixPath;
+  #     };
+
+
+  #     # garbage collection
+      # gc = {
+      #     automatic = true;
+      #     dates = "weekly";
+      #     options = "--delete-older-than 30d";
+      #   };
+
+      # Opinionated: disable channels
+      # channel.enable = false;
+
+  #     # Opinionated: make flake registry and nix path match flake inputs
+  #     registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
+  #     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
+  #   };
+
+      # nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
+  # nix.nix-path = config.nix.nixPath;
   # enable flakes and stuff
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  # nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix = let
+    flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
+      in {
+    settings = {
+      experimental-features = ["nix-command" "flakes"];
+    };
+
+    # garbage collection
+    gc = {
+        automatic = true;
+        dates = "weekly";
+        options = "--delete-older-than 30d";
+    };
+
+    # channel.enable = false;
+
+    # registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
+    # nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
+
+  };
   nixpkgs.config.allowUnfree = true;
+
+  # garbage collection delete old configs
+  boot.loader.grub.configurationLimit = 30;
 
   # Bootloader
   boot.loader.systemd-boot.enable = true;
@@ -174,7 +251,7 @@ in
       vim = "nvim";
       vimdiff = "nvim -d";
     };
-    # export is just for kakoune treesitter: export PATH=$HOME/.cargo/bin:$PATH
+    # # export is just for kakoune treesitter: export PATH=$HOME/.cargo/bin:$PATH
     promptInit=''
       function y() {
           local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
@@ -275,7 +352,8 @@ in
 
   # Enable sound with pipewire.
   # sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  # hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -289,15 +367,6 @@ in
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
-
-  # garbage collection settings
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
-  };
-  boot.loader.grub.configurationLimit = 30;
-
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true; # old way
@@ -342,7 +411,7 @@ in
 
     packages = with pkgs; [
       firefox
-      jetbrains.idea-community
+      # jetbrains.idea-community
       # discord
       discord-canary
       steam
@@ -365,8 +434,6 @@ in
     # neovim
     myneovim
 
-    # (import /home/josh/.config/my-hello.nix)
-
     ripgrep
     nil
     nixd
@@ -377,18 +444,17 @@ in
     pyright
     helix
 
-    # # have decided to use plug.kak instead
-    # (kakoune.override {
-    #   plugins = with pkgs.kakounePlugins; [
-    #     fzf-kak
-    #     kakoune-lsp
-    #     smarttab-kak
-    #   ];
-    # })
-
+    # tinycc
     kakoune
     kak-lsp
-    kak-tree-sitter
+    kak-tree-sitter-unwrapped
+    bc
+
+    lsp-ai
+    ollama
+
+
+    hyperfine
 
     zed-editor
     emacs #doom emacs needs: git, ripgrep; wants: fd, coreutils, clang
@@ -399,10 +465,12 @@ in
     lazygit
     yazi
     fd # for yazi
-    dragon
+    xdragon
     ranger # file manager
     # stuff for ranger
     atool
+    zip
+    p7zip
     unzip
     unrar
 
@@ -412,6 +480,7 @@ in
     zoxide
     fzf # not sure if I need this
     alacritty # terminal
+    ueberzugpp
     wezterm
     kitty
     cmatrix # Take The Purple Pill
