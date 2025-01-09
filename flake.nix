@@ -12,8 +12,11 @@
       system = "x86_64-linux";
         modules = [
           ({ pkgs, ... } : {system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;})
-          { environment.systemPackages = [ ki-editor.packages.x86_64-linux.default ]; }
-          { environment.systemPackages = [ stable.legacyPackages.x86_64-linux.bibata-cursors ]; }
+          { environment.systemPackages = [
+            stable.legacyPackages.x86_64-linux.bibata-cursors
+            stable.legacyPackages.x86_64-linux.jetbrains.idea-community
+            # ki-editor.packages.x86_64-linux.default
+          ]; }
           ./configuration.nix
       ];
     };
