@@ -15,7 +15,7 @@
           { environment.systemPackages = [
             stable.legacyPackages.x86_64-linux.bibata-cursors
             stable.legacyPackages.x86_64-linux.jetbrains.idea-community
-            # ki-editor.packages.x86_64-linux.default
+            ki-editor.packages.x86_64-linux.default
           ]; }
           ./configuration.nix
       ];
