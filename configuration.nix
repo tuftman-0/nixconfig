@@ -1,23 +1,25 @@
 #Edit this configuration file to define what should be installed on
 #f your system.  Help is available in the configuration.nix(5) man page
 #a and in the NixOS manual (accessible by running ‘nixos-help’).
-{ config, pkgs, inputs, lib, ... }:
-
+{
+  config,
+  pkgs,
+  inputs,
+  lib,
+  ...
+}:
 # let
 #   unstable = import <nixos-unstable> { config = { allowUnfree = true;}; };
 #     # (builtins.fetchTarball https://github.com/nixos/nixpkgs/tarball/unstable)
 #     # reuse the current configuration
 # in
-
 let
-
   # my-kak-tree-sitter = with pkgs; stdenv.mkDerivation rec {
   #   name = "kak-tree-sitter";
   #   src = fetchGit {
   #     url = "https://git.sr.ht/~hadronized/kak-tree-sitter";
   #   };
   # };
-
   # configure-gtk = pkgs.writeTextFile {
   #     name = "configure-gtk";
   #     destination = "/bin/configure-gtk";
@@ -30,34 +32,29 @@ let
   #       gsettings set $gnome_schema gtk-theme 'Dracula'
   #     '';
   #   };
- 
-
-  myneovim = pkgs.neovim.overrideAttrs
-      (old: {
-        generatedWrapperArgs = old.generatedWrapperArgs or [ ] ++ [
-          "--prefix"
-          "PATH"
-          ":"
-          (lib.makeBinPath [
-            pkgs.ripgrep
-            pkgs.gcc
-            pkgs.nodejs
-            pkgs.nil
-            pkgs.nixd
-            pkgs.pyright
-            pkgs.lua-language-server
-            pkgs.stylua
-            pkgs.deadnix
-            pkgs.statix
-            pkgs.fd
-          ])
-        ];
-      });
+  myneovim = pkgs.neovim.overrideAttrs (old: {
+    generatedWrapperArgs = old.generatedWrapperArgs or [ ] ++ [
+      "--prefix"
+      "PATH"
+      ":"
+      (lib.makeBinPath [
+        pkgs.ripgrep
+        pkgs.gcc
+        pkgs.nodejs
+        pkgs.nil
+        pkgs.nixd
+        pkgs.pyright
+        pkgs.lua-language-server
+        pkgs.stylua
+        pkgs.deadnix
+        pkgs.statix
+        pkgs.fd
+      ])
+    ];
+  });
 in
 {
-
   # nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"]; # not sure if this is necessary (doesn't seem to work)
-
 
   imports = [
     ./hardware-configuration.nix
@@ -71,20 +68,19 @@ in
   #   settings = {
   #     experimental-features = "nix-command flakes";
   #     nix-path = config.nix.nixPath;
- 
+
   #   };
 
-    # # garbage collection
-    # gc = {
-    #     automatic = true;
-    #     dates = "weekly";
-    #     options = "--delete-older-than 30d";
-    #   };
+  # # garbage collection
+  # gc = {
+  #     automatic = true;
+  #     dates = "weekly";
+  #     options = "--delete-older-than 30d";
+  #   };
 
-    # registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
-    # nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
+  # registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
+  # nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   # };
-
 
   # nix = let
   #     flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
@@ -98,46 +94,49 @@ in
   #       nix-path = config.nix.nixPath;
   #     };
 
-
   #     # garbage collection
-      # gc = {
-      #     automatic = true;
-      #     dates = "weekly";
-      #     options = "--delete-older-than 30d";
-      #   };
+  # gc = {
+  #     automatic = true;
+  #     dates = "weekly";
+  #     options = "--delete-older-than 30d";
+  #   };
 
-      # Opinionated: disable channels
-      # channel.enable = false;
+  # Opinionated: disable channels
+  # channel.enable = false;
 
   #     # Opinionated: make flake registry and nix path match flake inputs
   #     registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
   #     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   #   };
 
-      # nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
+  # nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   # nix.nix-path = config.nix.nixPath;
   # enable flakes and stuff
   # nix.settings.experimental-features = ["nix-command" "flakes"];
-  nix = let
-    flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
-      in {
-    settings = {
-      experimental-features = ["nix-command" "flakes"];
-    };
+  nix =
+    let
+      flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
+    in
+    {
+      settings = {
+        experimental-features = [
+          "nix-command"
+          "flakes"
+        ];
+      };
 
-    # garbage collection
-    gc = {
+      # garbage collection
+      gc = {
         automatic = true;
         dates = "weekly";
         options = "--delete-older-than 30d";
+      };
+
+      # channel.enable = false;
+
+      # registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
+      # nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
     };
-
-    # channel.enable = false;
-
-    # registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
-    # nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
-
-  };
   nixpkgs.config.allowUnfree = true;
 
   # garbage collection delete old configs
@@ -151,12 +150,11 @@ in
   # boot.loader.grub.useOSProber = true; # check if this works
 
   # stuff for OBS
-  boot.extraModulePackages = with config.boot.kernelPackages; [v4l2loopback];
-  boot.kernelModules = ["v4l2loopback"];
+  boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+  boot.kernelModules = [ "v4l2loopback" ];
   security.polkit.enable = true;
   # hardware.opengl.enable = true;
   hardware.graphics.enable = true; # same but for new version
-
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -224,7 +222,6 @@ in
     };
   };
 
-
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -238,13 +235,16 @@ in
 
   programs.thunar = {
     enable = true;
-    plugins = with pkgs.xfce; [thunar-archive-plugin thunar-volman];
+    plugins = with pkgs.xfce; [
+      thunar-archive-plugin
+      thunar-volman
+    ];
   };
 
   programs.file-roller.enable = true;
   services.gvfs.enable = true; # Mount, trash, and other functionalities
   services.tumbler.enable = true; # Thumbnail support for images
-  
+
   programs.zsh = {
     enable = true;
     shellAliases = {
@@ -252,17 +252,17 @@ in
       vimdiff = "nvim -d";
     };
     # # export is just for kakoune treesitter: export PATH=$HOME/.cargo/bin:$PATH
-    promptInit=''
-      function y() {
-          local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-          yazi "$@" --cwd-file="$tmp"
-          if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-              builtin cd -- "$cwd"
-          fi
-          rm -f -- "$tmp"
-      } 
-    	eval "$(zoxide init zsh)"
-    '';
+    # promptInit = ''
+    #    function y() {
+    #        local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    #        yazi "$@" --cwd-file="$tmp"
+    #        if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    #            builtin cd -- "$cwd"
+    #        fi
+    #        rm -f -- "$tmp"
+    #    }
+    #   eval "$(zoxide init zsh)"
+    # '';
 
     ohMyZsh = {
       enable = true;
@@ -281,31 +281,44 @@ in
     enable = true;
   };
 
+  services.keyd = {
+    enable = true;
+    keyboards = {
+      default = {
+        ids = [ "*" ];
+        settings = {
+          main = {
+            capslock = "esc";
+            esc = "capslock";
+          };
+        };
+      };
+    };
+  };
 
   # programs.yazi = {
   #   enable = true;
   # };
 
-
   # programs.direnv = {
   #   enable = true;
   # };
 
-  programs.nix-ld.enable=true;
+  programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
     # add missing libraries here
+    # stdenv.cc.cc
   ];
 
-# syncthing
+  # syncthing
   services.syncthing = {
     enable = true;
     user = "josh";
-    dataDir = "/home/josh/syncthing";    # Default folder for new synced folders
-    configDir = "/home/josh/syncthing";   # Folder for Syncthing's settings and keys
+    dataDir = "/home/josh/syncthing"; # Default folder for new synced folders
+    configDir = "/home/josh/syncthing"; # Folder for Syncthing's settings and keys
   };
 
-
-  environment.shells = with pkgs; [zsh];
+  environment.shells = with pkgs; [ zsh ];
   users.defaultUserShell = pkgs.zsh;
   environment.variables = {
     EDITOR = "kak";
@@ -314,13 +327,13 @@ in
 
   environment.sessionVariables = rec {
     NIXOS_OZONE_WL = "1";
-    XDG_CACHE_HOME  = "$HOME/.cache";
+    XDG_CACHE_HOME = "$HOME/.cache";
     XDG_CONFIG_HOME = "$HOME/.config";
-    XDG_DATA_HOME   = "$HOME/.local/share";
-    XDG_STATE_HOME  = "$HOME/.local/state";
+    XDG_DATA_HOME = "$HOME/.local/share";
+    XDG_STATE_HOME = "$HOME/.local/state";
 
     # Not officially in the specification
-    XDG_BIN_HOME    = "$HOME/.local/bin";
+    XDG_BIN_HOME = "$HOME/.local/bin";
 
     PATH = [
       "${XDG_BIN_HOME}"
@@ -331,8 +344,11 @@ in
     enable = true;
     xdgOpenUsePortal = true;
     config = {
-      common.default = ["gtk"];
-      hyprland.default = ["gtk" "hyprland"];
+      common.default = [ "gtk" ];
+      hyprland.default = [
+        "gtk"
+        "hyprland"
+      ];
     };
     extraPortals = [
       pkgs.xdg-desktop-portal-gtk
@@ -392,7 +408,7 @@ in
       cozette
       luculent
     ];
-    fontconfig= {
+    fontconfig = {
       enable = true;
       # antialias = true;
       hinting.enable = true;
@@ -406,7 +422,13 @@ in
   users.users.josh = {
     isNormalUser = true;
     description = "Josh Martin";
-    extraGroups = ["networkmanager" "wheel" "audio" "video" "input"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "audio"
+      "video"
+      "input"
+    ];
     shell = pkgs.zsh;
 
     packages = with pkgs; [
@@ -453,11 +475,10 @@ in
     lsp-ai
     ollama
 
-
     hyperfine
 
     zed-editor
-    emacs #doom emacs needs: git, ripgrep; wants: fd, coreutils, clang
+    emacs # doom emacs needs: git, ripgrep; wants: fd, coreutils, clang
 
     wget
     curl
@@ -526,12 +547,12 @@ in
     waybar
     dunst
     networkmanagerapplet
-    grim #screenshot
-    slurp #select
+    grim # screenshot
+    slurp # select
     wl-clipboard
     libnotify
     brightnessctl
-    swww #screenshare
+    swww # screenshare
     cups-pdf-to-pdf # print to pdf utility?
 
     # obs-studio
