@@ -150,8 +150,8 @@ in
   # boot.loader.grub.useOSProber = true; # check if this works
 
   # stuff for OBS
-  boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
-  boot.kernelModules = [ "v4l2loopback" ];
+  # boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+  # boot.kernelModules = [ "v4l2loopback" ];
   security.polkit.enable = true;
   # hardware.opengl.enable = true;
   hardware.graphics.enable = true; # same but for new version
@@ -499,6 +499,7 @@ in
 
     starship
     zoxide
+    zellij
     fzf # not sure if I need this
     alacritty # terminal
     ueberzugpp
@@ -519,7 +520,7 @@ in
     # citra
 
     # peazip # archive manager
-    pkgs.file-roller
+    file-roller
     lxqt.lxqt-policykit
 
     killall
