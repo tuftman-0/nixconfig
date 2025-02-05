@@ -14,6 +14,18 @@
 #     # reuse the current configuration
 # in
 let
+
+  nixpkgs.overlays = [
+    (self: super: {
+      my-kakoune = super.wrapKakoune self.kakoune-unwrapped {
+        configure = {
+          plugins = with self.kakounePlugins; [
+            parinfer-rust
+          ];
+        };
+      };
+    })
+  ];
   # my-kak-tree-sitter = with pkgs; stdenv.mkDerivation rec {
   #   name = "kak-tree-sitter";
   #   src = fetchGit {
@@ -254,6 +266,7 @@ in
     # # export is just for kakoune treesitter: export PATH=$HOME/.cargo/bin:$PATH
     # promptInit = ''
     #    function y() {
+      #    parinfer-rust
     #        local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
     #        yazi "$@" --cwd-file="$tmp"
     #        if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
@@ -434,8 +447,8 @@ in
     packages = with pkgs; [
       firefox
       # jetbrains.idea-community
-      # discord
-      discord-canary
+      discord
+      # discord-canary
       steam
       # gimp
       obsidian
@@ -467,13 +480,15 @@ in
     helix
 
     # tinycc
+    # my-kakoune
     kakoune
     kak-lsp
     kak-tree-sitter-unwrapped
+    parinfer-rust
     bc
+    cargo
 
     lsp-ai
-    ollama
 
     hyperfine
 
