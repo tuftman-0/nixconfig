@@ -446,6 +446,8 @@ in
 
     packages = with pkgs; [
       firefox
+      fx-cast-bridge
+      # fx_cast_bridge
       # jetbrains.idea-community
       discord
       # discord-canary
