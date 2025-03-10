@@ -137,7 +137,7 @@ in
         ];
       };
 
-      # garbage collection
+      # # garbage collection
       gc = {
         automatic = true;
         dates = "weekly";
@@ -168,7 +168,7 @@ in
   # hardware.opengl.enable = true;
   hardware.graphics.enable = true; # same but for new version
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "thunkpad"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -232,6 +232,13 @@ in
         user = "greeter";
       };
     };
+  };
+
+  services.fprintd = {
+    enable = true;
+    tod.enable = true;
+    # tod.driver = pkgs.libfprint-2-tod1-goodix;
+    tod.driver = pkgs.libfprint-2-tod1-vfs0090;
   };
 
   programs.hyprland = {
@@ -397,6 +404,7 @@ in
     #media-session.enable = true;
   };
 
+
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true; # old way
   services.libinput.enable = true;
@@ -429,6 +437,13 @@ in
       # subpixel.rgba = true;
       subpixel.lcdfilter = "default";
     };
+  };
+
+  # for fx-cast-bridge
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -489,6 +504,8 @@ in
     parinfer-rust
     bc
     cargo
+
+    asciinema
 
     lsp-ai
 
