@@ -308,7 +308,8 @@ in
         ids = [ "*" ];
         settings = {
           main = {
-            capslock = "esc";
+            # capslock = "esc";
+            capslock = "overload(control, esc)";
             esc = "capslock";
           };
         };
