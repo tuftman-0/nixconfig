@@ -508,8 +508,6 @@ in
 
     asciinema
 
-    lsp-ai
-
     hyperfine
 
     zed-editor
@@ -519,6 +517,7 @@ in
     curl
     git
     lazygit
+    pijul
     yazi
     fd # for yazi
     xdragon
