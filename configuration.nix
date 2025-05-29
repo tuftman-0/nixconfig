@@ -389,7 +389,7 @@ in
 
   # Enable sound with pipewire.
   # sound.enable = true;
-  # hardware.pulseaudio.enable = false;
+  # hardware.pulseaudio.enable = false; # old
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
