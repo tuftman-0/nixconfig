@@ -485,6 +485,8 @@ in
   environment.systemPackages = with pkgs; [
     # stuff I need
     # neovim
+    flatpak
+    stellarium
     myneovim
 
     ripgrep
