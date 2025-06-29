@@ -158,7 +158,7 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   # get latest kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
   # boot.loader.grub.useOSProber = true; # check if this works
 
   # stuff for OBS
@@ -478,6 +478,8 @@ in
       # mars-mips
     ];
   };
+  # uv stuff
+  environment.localBinInPath = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -507,6 +509,8 @@ in
     parinfer-rust
     bc
     cargo
+
+    uv
 
     asciinema
 
