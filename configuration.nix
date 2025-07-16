@@ -527,6 +527,8 @@ in
     yazi
     fd # for yazi
     xdragon
+
+    fastfetch # shows system specs and stuff
     ranger # file manager
     # stuff for ranger
     atool
