@@ -574,6 +574,7 @@ in
 
     mpd
     mpv
+    vlc
 
     pulseaudio # only needed for commands I think
     # steam-run
