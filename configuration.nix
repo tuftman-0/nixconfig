@@ -509,6 +509,7 @@ in
     parinfer-rust
     bc
     cargo
+    smartcat
 
     uv
 
