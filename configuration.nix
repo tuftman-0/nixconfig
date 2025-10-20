@@ -530,6 +530,9 @@ in
     fd # for yazi
     xdragon
 
+    zathura
+    zathuraPkgs.zathura_pdf_mupdf
+    zathuraPkgs.zathura_cb
     fastfetch # shows system specs and stuff
     ranger # file manager
     # stuff for ranger
