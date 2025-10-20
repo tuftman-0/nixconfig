@@ -432,6 +432,7 @@ in
     ];
     fontconfig = {
       enable = true;
+      allowBitmaps = true;
       # antialias = true;
       hinting.enable = true;
       hinting.autohint = true;
