@@ -467,7 +467,7 @@ in
       firefox
       fx-cast-bridge
       # fx_cast_bridge
-      # jetbrains.idea-community
+      jetbrains.idea-community
       discord
       # discord-canary
       steam
@@ -594,7 +594,7 @@ in
     hypridle
     hyprlock
     hyprpicker
-    # bibata-cursors
+    bibata-cursors
     waybar
     dunst
     networkmanagerapplet
