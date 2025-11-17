@@ -384,6 +384,8 @@ in
     enable = true;
     drivers = [
       pkgs.cups-pdf-to-pdf
+      pkgs.cups-filters
+      pkgs.cups-browsed
     ];
   };
 
