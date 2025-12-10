@@ -417,7 +417,7 @@ in
       iosevka
       noto-fonts
       noto-fonts-cjk-sans
-      noto-fonts-emoji
+      noto-fonts-color-emoji
       liberation_ttf
       fira-code
       fira-code-symbols
@@ -507,7 +507,7 @@ in
     # tinycc
     # my-kakoune
     kakoune
-    kak-lsp
+    kakoune-lsp
     kak-tree-sitter-unwrapped
     parinfer-rust
     bc
@@ -530,7 +530,7 @@ in
     pijul
     yazi
     fd # for yazi
-    xdragon
+    dragon-drop
 
     zathura
     zathuraPkgs.zathura_pdf_mupdf
