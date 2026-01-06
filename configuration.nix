@@ -548,6 +548,8 @@ in
     unzip
     unrar
 
+
+    ffmpeg
     lf # file manager
 
     starship
