@@ -471,7 +471,7 @@ in
       firefox
       fx-cast-bridge
       # fx_cast_bridge
-      jetbrains.idea-community
+      jetbrains.idea
       discord
       # discord-canary
       steam
