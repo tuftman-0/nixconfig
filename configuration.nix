@@ -485,6 +485,7 @@ in
       tor-browser
       protonvpn-gui
       qownnotes
+      logseq
       # mars-mips
     ];
   };
