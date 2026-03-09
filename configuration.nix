@@ -553,6 +553,8 @@ in
     unzip
     unrar
 
+    pdftk
+
 
     ffmpeg
     lf # file manager
