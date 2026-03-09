@@ -520,6 +520,7 @@ in
     parinfer-rust
     bc
     cargo
+    # clang
     smartcat
 
     uv
