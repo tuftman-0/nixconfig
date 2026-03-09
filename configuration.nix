@@ -207,6 +207,9 @@ in
   # # Enable the X11 windowing system.
   services.xserver.enable = true;
 
+  # Enable firmware update service
+  services.fwupd.enable = true;
+
   # Enable the Budgie Desktop environment.
   # services.xserver.displayManager.lightdm.enable = true;
   # services.xserver.desktopManager.budgie.enable = true;
