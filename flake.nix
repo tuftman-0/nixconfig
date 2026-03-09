@@ -17,7 +17,7 @@
           # stable.legacyPackages.x86_64-linux.bibata-cursors
           # stable.legacyPackages.x86_64-linux.jetbrains.idea-community
           # stable.legacyPackages.x86_64-linux.k2pdfopt
-          # ki-editor.packages.x86_64-linux.default
+          ki-editor.packages.x86_64-linux.default
         ]; }
         ./configuration.nix
       ];
