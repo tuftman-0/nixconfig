@@ -564,7 +564,7 @@ in
     zellij
     fzf # not sure if I need this
     alacritty # terminal
-    ueberzugpp
+    # ueberzugpp
     wezterm
     kitty
     cmatrix # Take The Purple Pill
