@@ -483,10 +483,11 @@ in
       # golly
       exercism
       tor-browser
-      protonvpn-gui
+      proton-vpn
       qownnotes
-      logseq
+      # logseq
       # mars-mips
+      tigervnc
     ];
   };
   # uv stuff
@@ -505,7 +506,7 @@ in
     ripgrep
     nil
     nixd
-    nixfmt-rfc-style # nix formatter
+    nixfmt # nix formatter
     alejandra # nix formatter
     lua-language-server
     # zls
@@ -616,7 +617,7 @@ in
     wl-clipboard
     libnotify
     brightnessctl
-    swww # screenshare
+    awww # screenshare
     cups-pdf-to-pdf # print to pdf utility?
 
     # obs-studio
