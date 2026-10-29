@@ -332,11 +332,11 @@ in
   #   enable = true;
   # };
 
-  programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [
-    # add missing libraries here
-    # stdenv.cc.cc
-  ];
+  # programs.nix-ld.enable = true;
+  # programs.nix-ld.libraries = with pkgs; [
+  #   # add missing libraries here
+  #   # stdenv.cc.cc
+  # ];
 
   # syncthing
   services.syncthing = {
