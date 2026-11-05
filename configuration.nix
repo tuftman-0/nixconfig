@@ -237,6 +237,13 @@ in
     };
   };
 
+  services.displayManager.sddm = {
+    enable = true;
+
+    wayland = {
+      enable = true;
+    };
+  };
   # services.fprintd = {
   #   enable = true;
   #   tod.enable = true;
@@ -246,6 +253,7 @@ in
 
   programs.hyprland = {
     enable = true;
+    withUWSM = true;
     xwayland.enable = true;
   };
 
@@ -375,13 +383,13 @@ in
       common.default = [ "gtk" ];
       hyprland.default = [
         "gtk"
-        "hyprland"
+        "/hyprland"
       ];
     };
     extraPortals = [
       pkgs.xdg-desktop-portal-gtk
       pkgs.xdg-desktop-portal-wlr
-      pkgs.xdg-desktop-portal-hyprland
+      # pkgs.xdg-desktop-portal-hyprland
     ];
   };
 
@@ -475,6 +483,7 @@ in
       fx-cast-bridge
       # fx_cast_bridge
       jetbrains.idea
+      archipelago
       discord
       # discord-canary
       steam
