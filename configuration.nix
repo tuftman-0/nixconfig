@@ -237,6 +237,7 @@ in
     };
   };
 
+
   services.displayManager.sddm = {
     enable = true;
 
@@ -332,6 +333,7 @@ in
     enable = true;
   };
 
+  virtualisation.podman.enable = true;
   # programs.yazi = {
   #   enable = true;
   # };
@@ -506,6 +508,7 @@ in
   # $ nix search wget
 
   environment.systemPackages = with pkgs; [
+    distrobox # for maple
     # stuff I need
     # neovim
     flatpak
